@@ -1,14 +1,16 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { IoArrowBack } from "react-icons/io5";
-import { Link  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Add.scss";
 import { TextField } from "@mui/material";
-import { useEffect, useState,  } from "react";
+import { useEffect, useState } from "react";
 import { Users } from "../../types/Users.type";
 import axios from "axios";
 import { useFormik } from "formik";
+import { Button } from "react-bootstrap";
 
 const Add = () => {
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -35,9 +37,9 @@ const Add = () => {
       return errors;
     },
     onSubmit: (values) => {
+      navigate("/");
       console.log(values);
       addUsers();
-
     },
   });
 
@@ -47,12 +49,16 @@ const Add = () => {
   const [, setUsers] = useState<Users[]>([]);
 
   const addUsers = async () => {
-    try {
-      const res = await axios.post(`http://localhost:400/users`, values); // Form qiymatlari axios bilan POST so'rovga jo'natiladi
-      const data = await res.data;
-      setUsers(data);
-    } catch (error) {
-      console.log(error);
+    if (values.name.length < 2 && values.username.length < 3) {
+      try {
+        const res = await axios.post(`http://localhost:400/users`, values);
+        const data = await res.data;
+        setUsers(data);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      alert("Name and username must be more than 2 characters");
     }
   };
 
@@ -67,7 +73,7 @@ const Add = () => {
           className="btn d-flex align-items-center gap-2 btn-md btn-primary fs-25 text-white"
           to={"/"}
         >
-          {" "}
+      
           <IoArrowBack size={22} />
           Back
         </Link>
@@ -155,9 +161,9 @@ const Add = () => {
           <Link className="btn btn-lg btn-secondary" to={"/"}>
             Cancel
           </Link>
-          <Link to={"/"} type="submit" className="btn btn-lg btn-primary">
+          <Button type="submit" className="btn btn-lg btn-primary">
             Save{" "}
-          </Link>
+          </Button>
         </div>
       </form>
     </div>
