@@ -137,7 +137,7 @@ const Edit = () => {
             id="phone"
             name="phone"
             label="Phone Number"
-            type="number"
+            type="text"
             variant="standard"
             onBlur={handleBlur}
             value={values.phone}
